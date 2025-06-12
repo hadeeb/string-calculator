@@ -27,5 +27,9 @@ describe("Add Function", (t) => {
 				expect(add(input)).toBe(output);
 			});
 		}
+
+		test("\n is not allowed as delimiter", () => {
+			expect(() => add("//\n\n1\n2")).toThrow();
+		});
 	});
 });

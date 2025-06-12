@@ -1,3 +1,9 @@
 export function add(numbers: string): number {
-	return 0;
+	const cleanedString = numbers.trim();
+	if (cleanedString === "") return 0;
+
+	return cleanedString
+		.split(",")
+		.map((num) => Number.parseInt(num.trim()), 10)
+		.reduce((sum, num) => sum + num, 0);
 }

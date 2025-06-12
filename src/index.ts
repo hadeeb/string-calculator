@@ -27,8 +27,23 @@ export function add(numbers: string): number {
 	if (cleanedString === "") return 0;
 	const { input, delimiter } = getInputAndDelimiter(cleanedString);
 
-	return input
+	const integers = input
 		.split(delimiter)
-		.map((num) => Number.parseInt(num.trim()), 10)
-		.reduce((sum, num) => sum + num, 0);
+		.map((num) => Number.parseInt(num.trim()), 10);
+
+	const negativeNumbers: Array<number> = [];
+	let sum = 0;
+	for (const num of integers) {
+		if (num < 0) {
+			negativeNumbers.push(num);
+		} else {
+			sum += num;
+		}
+	}
+
+	if (negativeNumbers.length > 0) {
+		throw new NegativeError(negativeNumbers);
+	}
+
+	return sum;
 }

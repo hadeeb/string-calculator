@@ -46,4 +46,20 @@ describe("Add Function", (t) => {
 			});
 		}
 	});
+
+	describe("Ignore numbers > 1000", () => {
+		const inputOutputMap = new Map([
+			["1,999", 1000],
+			["1,1000", 1001],
+			["2\n1001", 2],
+			["//x\n4000x6", 6],
+			["//;\n1001;2", 2],
+		]);
+
+		for (const [input, output] of inputOutputMap) {
+			test(`Input String("${input}")`, () => {
+				expect(add(input)).toBe(output);
+			});
+		}
+	});
 });

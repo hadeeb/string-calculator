@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { add } from "./index.js";
+import { add, NegativeError } from "./index.js";
 
 describe("Add Function", (t) => {
 	describe("Default delimiter", () => {
@@ -31,5 +31,19 @@ describe("Add Function", (t) => {
 		test("\n is not allowed as delimiter", () => {
 			expect(() => add("//\n\n1\n2")).toThrow();
 		});
+	});
+
+	describe("Negative numbers", () => {
+		const inputErrorMap = new Map([
+			["-1,2", [-1]],
+			["-10,-11", [-10, -11]],
+		]);
+
+		for (const [input, output] of inputErrorMap) {
+			test(`Input String("${input}")`, () => {
+				const error = new NegativeError(output);
+				expect(() => add(input)).toThrowError(error);
+			});
+		}
 	});
 });

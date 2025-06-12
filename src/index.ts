@@ -1,3 +1,9 @@
+export class NegativeError extends Error {
+	constructor(numbers: Array<number>) {
+		super(`negative numbers not allowed ${numbers.join(",")}`);
+	}
+}
+
 function getInputAndDelimiter(numbers: string): {
 	input: string;
 	delimiter: string | RegExp;

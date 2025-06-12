@@ -36,6 +36,8 @@ export function add(numbers: string): number {
 	for (const num of integers) {
 		if (num < 0) {
 			negativeNumbers.push(num);
+		} else if (num > 1000) {
+			// continue
 		} else {
 			sum += num;
 		}

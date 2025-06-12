@@ -4,11 +4,24 @@ export class NegativeError extends Error {
 	}
 }
 
-function parseDelimiter(delimiter: string): string {
+function parseDelimiter(delimiter: string): RegExp | string {
 	if (delimiter.length === 1) return delimiter;
-	// delimiter can be of shape `[xxx]`
-	// strip the first and last characters
-	return delimiter.slice(1, -1);
+	// delimiter can be of shape `[xxx][y]`
+	// split at ][, and strip off any remaining square brackets
+	const delimiters = delimiter
+		.split("][")
+		.map((part) => part.replaceAll(/[\]\[]/g, ""));
+
+	// create a regexp with the list
+	const regexpBody = delimiters
+		// prefix regex special characters with \
+		// Ignoring [ and ] as they are used for delimiter grouping
+		// and are already stripped off
+		.map((part) =>
+			part.replaceAll(/[.*+?^${}()|\\]/g, (character) => `\\${character}`),
+		)
+		.join("|");
+	return new RegExp(regexpBody);
 }
 
 function getInputAndDelimiter(numbers: string): {

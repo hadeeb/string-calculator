@@ -4,6 +4,13 @@ export class NegativeError extends Error {
 	}
 }
 
+function parseDelimiter(delimiter: string): string {
+	if (delimiter.length === 1) return delimiter;
+	// delimiter can be of shape `[xxx]`
+	// strip the first and last characters
+	return delimiter.slice(1, -1);
+}
+
 function getInputAndDelimiter(numbers: string): {
 	input: string;
 	delimiter: string | RegExp;
@@ -15,7 +22,8 @@ function getInputAndDelimiter(numbers: string): {
 		const delimiter = delimiterLine.slice(delimiterPrefix.length);
 		// If delimiter is empty or \n, this will be empty
 		if (delimiter === "") throw new TypeError("No/Invalid delimiter");
-		return { input: rest, delimiter };
+
+		return { input: rest, delimiter: parseDelimiter(delimiter) };
 	}
 
 	// Return the default delimiter

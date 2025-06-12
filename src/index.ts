@@ -50,7 +50,7 @@ export function add(numbers: string): number {
 
 	const integers = input
 		.split(delimiter)
-		.map((num) => Number.parseInt(num.trim()), 10);
+		.map((num) => Number.parseInt(num.trim(), 10));
 
 	const negativeNumbers: Array<number> = [];
 	let sum = 0;

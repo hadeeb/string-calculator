@@ -7,6 +7,7 @@ describe("Add Function", (t) => {
 		["1", 1],
 		["1,5", 6],
 		["1\n2,3", 6],
+		["//;\n1;2", 3],
 	]);
 
 	for (const [input, output] of inputOutputMap) {

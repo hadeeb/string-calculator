@@ -76,4 +76,18 @@ describe("Add Function", (t) => {
 			});
 		}
 	});
+
+	describe("Multiple delimiters", () => {
+		const inputOutputMap = new Map([
+			["//[*][%]\n1*2%3", 6],
+			["//[++][%]\n10++20%30", 60],
+			["//[-][++][***]\n100-200++300***400", 1000],
+		]);
+
+		for (const [input, output] of inputOutputMap) {
+			test(`Input String("${input}")`, () => {
+				expect(add(input)).toBe(output);
+			});
+		}
+	});
 });

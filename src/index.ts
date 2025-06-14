@@ -43,30 +43,40 @@ function getInputAndDelimiter(numbers: string): {
 	return { input: numbers, delimiter: /[,\n]/ };
 }
 
-export function add(numbers: string): number {
-	const cleanedString = numbers.trim();
-	if (cleanedString === "") return 0;
-	const { input, delimiter } = getInputAndDelimiter(cleanedString);
-
-	const integers = input
-		.split(delimiter)
-		.map((num) => Number.parseInt(num.trim(), 10));
-
+function parseNumbers(stringList: Array<string>) {
 	const negativeNumbers: Array<number> = [];
-	let sum = 0;
+	const validNumbers: Array<number> = [];
+
+	const integers = stringList.map((num) => Number.parseInt(num.trim(), 10));
 	for (const num of integers) {
 		if (num < 0) {
 			negativeNumbers.push(num);
 		} else if (num > 1000) {
 			// continue
 		} else {
-			sum += num;
+			validNumbers.push(num);
 		}
 	}
+
+	return { negativeNumbers, validNumbers };
+}
+
+function calculateSum(numbers: Array<number>) {
+	return numbers.reduce((sum, num) => sum + num, 0);
+}
+
+export function add(numbers: string): number {
+	const cleanedString = numbers.trim();
+	if (cleanedString === "") return 0;
+	const { input, delimiter } = getInputAndDelimiter(cleanedString);
+
+	const stringList = input.split(delimiter);
+
+	const { negativeNumbers, validNumbers } = parseNumbers(stringList);
 
 	if (negativeNumbers.length > 0) {
 		throw new NegativeError(negativeNumbers);
 	}
 
-	return sum;
+	return calculateSum(validNumbers);
 }

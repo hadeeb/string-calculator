@@ -24,6 +24,8 @@ function parseDelimiter(delimiter: string): RegExp | string {
 	return new RegExp(regexpBody);
 }
 
+type Limits = { start: number; end: number };
+
 function getInputDelimiterAndOperation(numbers: string): {
 	input: string;
 	delimiter: string | RegExp;
@@ -56,12 +58,26 @@ function getInputDelimiterAndOperation(numbers: string): {
 	return { input: numbers, delimiter: /[,\n]/, operation: calculateSum };
 }
 
-function parseNumbers(stringList: Array<string>) {
+function parseNumbers(stringList: Array<string>, limits?: Limits) {
 	const negativeNumbers: Array<number> = [];
 	const validNumbers: Array<number> = [];
 
 	const integers = stringList.map((num) => Number.parseInt(num.trim(), 10));
+
+	// Validate the limits
+	if (limits != null) {
+		if (limits.start > limits.end) {
+			throw new TypeError("start be should be less than or equal to end");
+		}
+	}
+
+	function isValid(number: number) {
+		if (limits == null) return true;
+		return number >= limits.start && number <= limits.end;
+	}
+
 	for (const num of integers) {
+		if (!isValid(num)) continue;
 		if (num < 0) {
 			negativeNumbers.push(num);
 		} else if (num > 1000) {
@@ -82,7 +98,7 @@ function calculateProduct(numbers: Array<number>) {
 	return numbers.reduce((acc, num) => acc * num, 1);
 }
 
-export function add(numbers: string): number {
+export function add(numbers: string, limits?: Limits): number {
 	const cleanedString = numbers.trim();
 	if (cleanedString === "") return 0;
 	const { input, delimiter, operation } =
@@ -90,7 +106,7 @@ export function add(numbers: string): number {
 
 	const stringList = input.split(delimiter);
 
-	const { negativeNumbers, validNumbers } = parseNumbers(stringList);
+	const { negativeNumbers, validNumbers } = parseNumbers(stringList, limits);
 
 	if (negativeNumbers.length > 0) {
 		throw new NegativeError(negativeNumbers);

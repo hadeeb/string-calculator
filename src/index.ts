@@ -24,9 +24,10 @@ function parseDelimiter(delimiter: string): RegExp | string {
 	return new RegExp(regexpBody);
 }
 
-function getInputAndDelimiter(numbers: string): {
+function getInputDelimiterAndOperation(numbers: string): {
 	input: string;
 	delimiter: string | RegExp;
+	operation: (numbers: Array<number>) => number;
 } {
 	const delimiterPrefix = "//";
 	if (numbers.startsWith(delimiterPrefix)) {
@@ -36,11 +37,23 @@ function getInputAndDelimiter(numbers: string): {
 		// If delimiter is empty or \n, this will be empty
 		if (delimiter === "") throw new TypeError("No/Invalid delimiter");
 
-		return { input: rest, delimiter: parseDelimiter(delimiter) };
+		if (delimiter === "*") {
+			return {
+				input: rest,
+				delimiter: parseDelimiter(delimiter),
+				operation: calculateProduct,
+			};
+		}
+
+		return {
+			input: rest,
+			delimiter: parseDelimiter(delimiter),
+			operation: calculateSum,
+		};
 	}
 
 	// Return the default delimiter
-	return { input: numbers, delimiter: /[,\n]/ };
+	return { input: numbers, delimiter: /[,\n]/, operation: calculateSum };
 }
 
 function parseNumbers(stringList: Array<string>) {
@@ -65,10 +78,15 @@ function calculateSum(numbers: Array<number>) {
 	return numbers.reduce((sum, num) => sum + num, 0);
 }
 
+function calculateProduct(numbers: Array<number>) {
+	return numbers.reduce((acc, num) => acc * num, 1);
+}
+
 export function add(numbers: string): number {
 	const cleanedString = numbers.trim();
 	if (cleanedString === "") return 0;
-	const { input, delimiter } = getInputAndDelimiter(cleanedString);
+	const { input, delimiter, operation } =
+		getInputDelimiterAndOperation(cleanedString);
 
 	const stringList = input.split(delimiter);
 
@@ -78,5 +96,5 @@ export function add(numbers: string): number {
 		throw new NegativeError(negativeNumbers);
 	}
 
-	return calculateSum(validNumbers);
+	return operation(validNumbers);
 }

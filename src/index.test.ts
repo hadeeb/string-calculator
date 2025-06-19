@@ -90,4 +90,8 @@ describe("Add Function", (t) => {
 			});
 		}
 	});
+
+	test("Multiply when the delimiter is single *", () => {
+		expect(add("//*\n4*6")).toBe(24);
+	});
 });
